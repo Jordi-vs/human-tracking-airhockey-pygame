@@ -2,7 +2,7 @@ import pygame
 
 
 class Entity:
-    def __init__(self, img, x=100, y=100, width=100, height=100, screen_x=640, screen_y=960, offset=10):
+    def __init__(self, img, x=100, y=100, width=100, height=100, screen_x=640, screen_y=960, offset=20):
         self.width = width
         self.height = height
         self.img = pygame.transform.scale(img, (width, height))
