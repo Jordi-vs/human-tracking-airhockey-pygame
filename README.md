@@ -1,1 +1,1 @@
-# human-tracking-icehockey-pygame
+# human-tracking-airhockey-pygame
