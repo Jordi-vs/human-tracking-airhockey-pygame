@@ -1,12 +1,12 @@
-import pygame
 from Entity import Entity
 from Player_enums import Players
 
 
 class Player(Entity):
-    def __init__(self, img, player: Players):
+    def __init__(self, img, player: Players, capture):
         super().__init__(img)
         self.player = player
+        self.capture = capture
 
     def move(self, x, y):
         y_offset = 0

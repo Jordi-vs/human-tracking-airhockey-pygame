@@ -7,7 +7,7 @@ from Player import Player
 from Player_enums import Players
 
 
-def update_screen():
+def update_screen(screen):
     screen.fill((0, 0, 0))
     screen.blit(air_hockey_table, (0, 0))
     p1.draw(screen)
@@ -17,14 +17,13 @@ def update_screen():
     pygame.draw.rect(screen, (255, 0, 0), goal2)
 
 
-def image_to_player_pos(cap):
-    success, img = cap.read()
+def image_to_player_pos(player):
+    success, img = player.capture.read()
     img = detector.findPose(img)
     imlist, bbox = detector.findPosition(img)
-    cv2.imshow("body", img)
+    cv2.imshow(str(player.player), img)
     if len(bbox) != 0:
-        p1.move(bbox["center"][0], bbox["center"][1])
-        p2.move(bbox["center"][0], bbox["center"][1] - 100)
+        player.move(bbox["center"][0], bbox["center"][1])
 
 
 def mouse_to_player_pos():
@@ -37,16 +36,16 @@ def reset_game():
     return Ball(ball_image, speed_start=200, speed_limit=2000)
 
 
-def check_player_ball_collision():
-    if p1.rect.colliderect(ball) and ball.dy > 0:
+def check_player_ball_collision(player1, player2, ball):
+    if player1.rect.colliderect(ball) and ball.dy > 0:
         hit_sound.play()
         ball.player_collision()
-    if p2.rect.colliderect(ball) and ball.dy < 0:
+    if player2.rect.colliderect(ball) and ball.dy < 0:
         hit_sound.play()
         ball.player_collision()
 
 
-def update_score():
+def update_score(score1, score2):
     score_text = my_font.render(str(score1), False, (255, 255, 255))
     high_score_text = my_font.render(str(score2), False, (255, 255, 255))
     screen.blit(score_text, (screen_x / 2 - 50, screen_y / 4 - 75))
@@ -78,8 +77,8 @@ air_hockey_table = pygame.transform.scale(air_hockey_table, (screen_x, screen_y)
 ball_image = pygame.image.load(sprite_path + 'ball.png')
 
 # Initialize players and ball
-p1 = Player(ghost, Players.PLAYER_1)
-p2 = Player(bird, Players.PLAYER_2)
+p1 = Player(ghost, Players.PLAYER_1, cap1)
+p2 = Player(bird, Players.PLAYER_2, cap2)
 ball = Ball(ball_image, speed_start=500, speed_limit=2000)
 
 # Initialize goals
@@ -99,8 +98,8 @@ score2 = 0
 # Music / SFX
 sound_path = 'wav_sounds/'
 hit_sound = pygame.mixer.Sound(sound_path + 'hit_sound.wav')
-# pygame.mixer.music.load(sound_path + 'arcade_music.wav')
-# pygame.mixer.music.play(-1)
+pygame.mixer.music.load(sound_path + 'arcade_music.wav')
+pygame.mixer.music.play(-1)
 
 
 while running:
@@ -111,10 +110,11 @@ while running:
         if event.type == pygame.QUIT:
             running = False
             break
-    image_to_player_pos(cap1)
-    # mouse_to_player_pos()
+    # image_to_player_pos(p1)
+    # image_to_player_pos(p2)
+    mouse_to_player_pos()
     ball.move(ms_frame)
-    check_player_ball_collision()
+    check_player_ball_collision(p1, p2, ball)
 
     if ball.rect.colliderect(goal1):
         score2 += 1
@@ -124,9 +124,10 @@ while running:
         score1 += 1
         ball = reset_game()
 
-    update_screen()
-    update_score()
+    update_screen(screen)
+    update_score(score1, score2)
     pygame.display.flip()
 
 cap1.release()
+cap2.release()
 cv2.destroyAllWindows()

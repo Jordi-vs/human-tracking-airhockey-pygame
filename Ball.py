@@ -1,5 +1,7 @@
-import pygame
 import random
+
+import pygame
+
 from Entity import Entity
 
 
@@ -16,7 +18,7 @@ class Ball(Entity):
         self.keep_in_border()
 
     def player_collision(self):
-        self.dx = random.uniform(-500, 500)
+        self.dx = random.uniform(-500, 500) * self.dy / 500
         self.dy = min(max(self.dy * -1.1, -self.speed_limit), self.speed_limit)
 
     def keep_in_border(self):
