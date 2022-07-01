@@ -140,9 +140,14 @@ while RUNNING:
         if event.type == pygame.QUIT:
             RUNNING = False
             break
-    # image_to_player_pos(p1)
-    # image_to_player_pos(p2)
-    mouse_to_player_pos()
+
+    # FOR 2 CAMERA MULTI PLAYER (Uncomment)
+    image_to_player_pos(p1)
+    image_to_player_pos(p2)
+
+    # FOR 1 MOUSE SINGLE PLAYER (Uncomment)
+    # mouse_to_player_pos()
+
     ball.move(ms_frame)
     check_player_ball_collision(p1, p2, ball)
 

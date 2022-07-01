@@ -1,0 +1,4 @@
+cvzone==1.5.6
+opencv_python==4.5.5.64
+pygame==2.1.2
+mediapipe
